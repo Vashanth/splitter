@@ -10,6 +10,10 @@ const router = express.Router();
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
+router.get('/health', (req, res) => {
+  res.send('OK');
+});
+
 router.use('/groups', groups);
 router.use('/transactions', transactions);
 router.use('/users', users);
