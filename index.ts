@@ -4,17 +4,18 @@ import router from './routes';
 import connectDB from './database/db';
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3000;
 
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
 }));
 
-app.use('/', router);
 app.options('*', cors());
+
+app.use('/', router);
 
 async function startServer() {
   await connectDB();
