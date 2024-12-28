@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { CLIENT_ID } from '../constants';
 import jwt from 'jsonwebtoken';
 
 const { OAuth2Client } = require('google-auth-library');
 
-const client = new OAuth2Client(CLIENT_ID);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -25,7 +24,7 @@ export async function login(req: Request, res: Response) {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: CLIENT_ID,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
     const { sub, name } = payload;
