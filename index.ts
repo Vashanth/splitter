@@ -1,11 +1,20 @@
 import express from 'express';
+import cors from 'cors';
 import router from './routes';
 import connectDB from './database/db';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3001;
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use('/', router);
+app.options('*', cors());
 
 async function startServer() {
   await connectDB();
@@ -18,4 +27,3 @@ startServer().catch((error) => {
   console.error('Failed to start server:', error);
   process.exit(1);
 });
-
