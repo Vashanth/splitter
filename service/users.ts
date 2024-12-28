@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { CLIENT_ID } from '../constants';
+import jwt from 'jsonwebtoken';
 
 const { OAuth2Client } = require('google-auth-library');
 
@@ -27,7 +28,7 @@ export async function login(req: Request, res: Response) {
       audience: CLIENT_ID,
     });
     const payload = ticket.getPayload();
-    const { sub, name } = payload; 
+    const { sub, name } = payload;
 
     // Check if user exists in the database
     let user = await User.findOne({ googleId: sub });
@@ -37,8 +38,18 @@ export async function login(req: Request, res: Response) {
       await user.save();
     }
 
-    res.cookie('auth_token', user.id, { 
-      httpOnly: true, 
+    // Create JWT token with user data
+    const jwtToken = jwt.sign(
+      { 
+        id: user.id,
+        name: user.name
+      },
+      process.env.JWT_SECRET || 'something',
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('auth_token', jwtToken, {
+      httpOnly: true,
       secure: true, 
       maxAge: 1 * 60 * 60 * 1000,
       sameSite: 'none',
@@ -59,6 +70,8 @@ export async function getUser(req: Request, res: Response) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  const user = await User.findById(auth_token);
+  const decoded = jwt.verify(auth_token, process.env.JWT_SECRET || 'something') as { id: string };
+  
+  const user = await User.findById(decoded.id);
   res.json(user);
 }
