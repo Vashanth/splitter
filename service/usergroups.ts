@@ -14,10 +14,10 @@ export async function joinGroup(req: Request, res: Response) {
       return res.status(404).json({ error: 'User or group not found' });
     }
 
-    const doesUserGroupExist = await UserGroup.findOne({ user: user._id, group: group._id });
+    const currentUserGroup = await UserGroup.findOne({ user: user._id, group: group._id });
 
-    if (doesUserGroupExist) {
-      return res.status(200).json(group);
+    if (currentUserGroup) {
+      return res.status(200).json(currentUserGroup);
     }
 
     const userGroup = new UserGroup({ user: user._id, group: group._id });
