@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
-// MongoDB connection URL
-const mongoURI = 'mongodb+srv://mongodb:<password>@cluster0.gsi8x.mongodb.net'; // Replace with your MongoDB URI
-
 const connectDB = async () => {
+  const mongoURI = `mongodb+srv://mongodb:${process.env.MONGO_PASSWORD}@cluster0.gsi8x.mongodb.net`; 
+  
   try {
     await mongoose.connect(mongoURI);
   } catch (error: unknown) {
