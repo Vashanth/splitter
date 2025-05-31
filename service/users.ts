@@ -26,3 +26,17 @@ export async function getUser(req: Request, res: Response) {
   const user = await User.findOne({ identifier: req.identifier });
   res.json(user);
 }
+
+export async function subscribe(req: Request, res: Response) {
+  const { subscription } = req.body;
+  const user = await User.findOne({ identifier: req.identifier });
+
+  if (!user) {
+    res.status(404).json({ message: 'User not found' });
+    return;
+  }
+
+  user.subscription = subscription;
+  await user.save();
+  res.json(user);
+}

@@ -20,7 +20,7 @@ export const getAuthToken = (req: Request) => {
 };
 
 export const setAuthToken = (res: Response, user: UserCookieData) => {
-  const jwtToken = jwt.sign({ id: user.identifier }, process.env.JWT_SECRET || 'something', { expiresIn: '1h' });
+  const jwtToken = jwt.sign({ id: user.identifier }, process.env.JWT_SECRET || 'something', { expiresIn: '1d' });
   res.setHeader('Set-Cookie', `auth_token=${jwtToken}; HttpOnly; Secure; SameSite=None; Partitioned; Path=/`);
 };
 

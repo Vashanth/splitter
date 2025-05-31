@@ -8,6 +8,18 @@ const userSchema = new mongoose.Schema({
   identifier: {
     type: String,
     required: true
+  },
+  profileImage: {
+    type: String,
+    required: false
+  },
+  email: {
+    type: String,
+    required: false
+  },
+  subscription: {
+    type: Object,
+    required: false
   }
 });
 

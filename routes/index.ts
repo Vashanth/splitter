@@ -1,8 +1,10 @@
 import express from 'express';
+import fs from 'fs';
 import groups from './groups';
 import transactions from './transactions';
 import users from './users';
 import usergroups from './usergroups';
+import balances from './balances';
 
 const router = express.Router();
 
@@ -18,5 +20,6 @@ router.use('/groups', groups);
 router.use('/transactions', transactions);
 router.use('/users', users);
 router.use('/usergroups', usergroups);
+router.use('/balances', balances);
 
 export default router;

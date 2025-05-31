@@ -39,7 +39,12 @@ export async function getGroups(req: Request, res: Response) {
 export async function getGroup(req: Request, res: Response) {
   const group = await Group.findOne({ _id: req.params.id });
   const invite = await Invite.findOne({ groupId: group?._id });
-  const groupWithInviteCode = { ...group?.toObject(), inviteCode: invite?.inviteCode };
+  const usersInGroup = await UserGroup.find({ group: group?._id }).populate<{ user: { name: string } }>('user');
+  const collatedGroup = {
+    ...group?.toObject(),
+    inviteCode: invite?.inviteCode,
+    users: usersInGroup.map((userGroup) => userGroup.user)
+  };
 
-  return res.json(groupWithInviteCode);
+  return res.json(collatedGroup);
 }

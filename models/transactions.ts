@@ -5,7 +5,7 @@ const transactionSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  description: {
+  name: {
     type: String,
     default: ''
   },
@@ -14,12 +14,29 @@ const transactionSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  to: {
+  splits: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    share: {
+      type: Number,
+      required: true
+    }
+  }],
+  groupId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Group',
+    required: true
+  },
+  date: {
+    type: Date,
     required: true
   }
 });
+
+transactionSchema.index({ groupId: 1 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
 
